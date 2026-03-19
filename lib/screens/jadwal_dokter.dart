@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
-
-// ─── Theme constants (identik dengan file lain) ───────────────────────────────
-const _kNavy = Color(0xFF00155E);
-const _kNavy2 = Color(0xFF00155E);
-const _kBlue1 = Color(0xFF00155E);
-const _kBlue2 = Color(0xFF00155E);
-const _kNeutral50 = Color(0xFFF4F6FA);
-const _kNeutral100 = Color(0xFFEAEDF3);
-const _kNeutral300 = Color(0xFFCDD1DC);
-const _kNeutral500 = Color(0xFF8A90A0);
-const _kText = Color(0xFF00155E);
-const _kTextSub = Color(0xFF5A6070);
-const _kTextHint = Color(0xFFB0B5C0);
-const _kWhite = Colors.white;
+import '../widgets/app_colors.dart';
+import '../widgets/kiosk_navbar.dart';
 
 class JadwalDokterScreen extends StatefulWidget {
   const JadwalDokterScreen({super.key});
@@ -73,11 +61,32 @@ class _JadwalDokterScreenState extends State<JadwalDokterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final total = jadwal.length;
+    final tersedia = jadwal.where((d) => d['status'] == 'Tersedia').length;
+    final penuh = total - tersedia;
+
     return Scaffold(
-      backgroundColor: _kNeutral50,
+      backgroundColor: AppColors.neutral50,
       body: Column(
         children: [
-          _buildHeader(),
+          KioskNavbar(
+            title: 'Jadwal Dokter',
+            subtitle: 'Daftar dokter yang bertugas hari ini',
+            backLabel: 'Menu Utama',
+            stats: [
+              NavStatChip(label: 'Total', value: '$total'),
+              NavStatChip(
+                label: 'Tersedia',
+                value: '$tersedia',
+                color: const Color(0xFF4ADE80),
+              ),
+              NavStatChip(
+                label: 'Penuh',
+                value: '$penuh',
+                color: const Color(0xFFF87171),
+              ),
+            ],
+          ),
           _buildSearchBar(),
           Expanded(
             child: ListView.builder(
@@ -92,105 +101,15 @@ class _JadwalDokterScreenState extends State<JadwalDokterScreen> {
     );
   }
 
-  Widget _buildHeader() {
-    final total = jadwal.length;
-    final tersedia = jadwal.where((d) => d['status'] == 'Tersedia').length;
-    final penuh = total - tersedia;
-
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_kNavy, _kNavy2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // AppBar row
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-              child: Row(
-                children: [
-                  Builder(
-                    builder: (ctx) => IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded,
-                          color: _kWhite, size: 22),
-                      onPressed: () => Navigator.maybePop(ctx),
-                    ),
-                  ),
-                  const Text('Menu Utama',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: _kWhite)),
-                  const Spacer(),
-                ],
-              ),
-            ),
-            // Title block
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 14, 20, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Jadwal Dokter',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: _kWhite,
-                        letterSpacing: -0.3,
-                      )),
-                  SizedBox(height: 6),
-                  Text('Daftar dokter yang bertugas hari ini',
-                      style: TextStyle(
-                          fontSize: 13, color: Colors.white60, height: 1.4)),
-                ],
-              ),
-            ),
-            // Stats strip
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: Row(
-                children: [
-                  _StatChip(label: 'Total', value: '$total'),
-                  const SizedBox(width: 8),
-                  _StatChip(
-                    label: 'Tersedia',
-                    value: '$tersedia',
-                    color: const Color(0xFF4ADE80),
-                  ),
-                  const SizedBox(width: 8),
-                  _StatChip(
-                    label: 'Penuh',
-                    value: '$penuh',
-                    color: const Color(0xFFF87171),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          color: _kWhite,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: _kNeutral100),
+          border: Border.all(color: AppColors.neutral100),
         ),
         child: TextField(
           onChanged: (value) {
@@ -201,57 +120,19 @@ class _JadwalDokterScreenState extends State<JadwalDokterScreen> {
           decoration: const InputDecoration(
             hintText: 'Cari dokter atau spesialis',
             hintStyle: TextStyle(
-              color: _kTextHint,
+              color: AppColors.textHint,
               fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
             prefixIcon: Icon(
               Icons.search_rounded,
-              color: _kNeutral500,
+              color: AppColors.neutral500,
               size: 20,
             ),
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(vertical: 13),
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ─── Stat chip di header ──────────────────────────────────────────────────────
-class _StatChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
-
-  const _StatChip({
-    required this.label,
-    required this.value,
-    this.color = _kWhite,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(value,
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w800, color: color)),
-          const SizedBox(width: 6),
-          Text(label,
-              style: const TextStyle(
-                  fontSize: 11,
-                  color: Colors.white60,
-                  fontWeight: FontWeight.w500)),
-        ],
       ),
     );
   }
@@ -285,7 +166,7 @@ class _DokterCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: const Color(0xFFEAEDF3), width: 0.5),
       ),
@@ -298,19 +179,13 @@ class _DokterCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                gradient: _isTersedia
-                    ? const LinearGradient(
-                        colors: [_kBlue1, _kBlue2],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : null,
+                gradient: _isTersedia ? AppColors.blueGradient : null,
                 color: _isTersedia ? null : const Color(0xFFEAEDF3),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
                 Icons.medical_services_rounded,
-                color: _isTersedia ? _kWhite : _kNeutral500,
+                color: _isTersedia ? AppColors.white : AppColors.neutral500,
                 size: 22,
               ),
             ),
@@ -325,7 +200,7 @@ class _DokterCard extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
-                          color: _kText)),
+                          color: AppColors.text)),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -334,13 +209,13 @@ class _DokterCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: _kBlue1.withOpacity(0.08),
+                          color: AppColors.blue1.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(data['spesialis']!,
                             style: const TextStyle(
                               fontSize: 11,
-                              color: _kBlue1,
+                              color: AppColors.blue1,
                               fontWeight: FontWeight.w600,
                             )),
                       ),
@@ -397,7 +272,7 @@ class _DokterCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: _kNeutral50,
+                    color: AppColors.neutral50,
                     borderRadius: BorderRadius.circular(10),
                     border:
                         Border.all(color: const Color(0xFFEAEDF3), width: 0.5),
@@ -405,15 +280,15 @@ class _DokterCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.access_time_rounded,
-                          size: 12, color: _kNeutral500),
+                      const Icon(Icons.access_time_rounded,
+                          size: 12, color: AppColors.neutral500),
                       const SizedBox(width: 4),
                       Text(
                         '$jamMulai – $jamSelesai',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: _kText,
+                          color: AppColors.text,
                         ),
                       ),
                     ],
@@ -424,14 +299,14 @@ class _DokterCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.timelapse_rounded,
-                        size: 11, color: _kNeutral500),
+                    const Icon(Icons.timelapse_rounded,
+                        size: 11, color: AppColors.neutral500),
                     const SizedBox(width: 3),
                     Text(
                       _durasi(jamMulai, jamSelesai),
                       style: const TextStyle(
                         fontSize: 10,
-                        color: _kNeutral500,
+                        color: AppColors.neutral500,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

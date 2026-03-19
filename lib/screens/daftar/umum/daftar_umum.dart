@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/app_colors.dart';
+import '../../../widgets/kiosk_navbar.dart';
 import 'umum_belum_terdaftar.dart';
 import 'umum_terdaftar.dart';
 
@@ -7,61 +9,14 @@ class DaftarUmum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double topInset = MediaQuery.of(context).padding.top;
-
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppColors.neutral50,
       body: Column(
         children: [
-          /// HEADER DENGAN TOMBOL BACK
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(24, topInset + 10, 24, 34),
-            decoration: const BoxDecoration(
-              color: Color(0xff0b2a6f),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.14),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: Colors.white),
-                    padding: EdgeInsets.zero,
-                    splashRadius: 20,
-                  ),
-                ),
-                const SizedBox(height: 22),
-                const Text(
-                  "Menu Pendaftaran",
-                  style: TextStyle(color: Colors.white70, fontSize: 15),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  "Pilih Kategori",
-                  style: TextStyle(
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Silahkan pilih jenis layanan pendaftaran anda",
-                  style: TextStyle(color: Colors.white70, fontSize: 17),
-                ),
-              ],
-            ),
+          KioskNavbar(
+            title: 'Pilih Kategori',
+            subtitle: 'Silahkan pilih jenis layanan pendaftaran anda',
+            backLabel: 'Menu Pendaftaran',
           ),
 
           const SizedBox(height: 40),
@@ -76,9 +31,7 @@ class DaftarUmum extends StatelessWidget {
                     context,
                     "Terdaftar",
                     Icons.person,
-                    const LinearGradient(
-                      colors: [Color(0xff1d76e2), Color.fromARGB(255, 17, 10, 158)],
-                    ),
+                    AppColors.blueGradient,
                     UmumTerdaftar(),
                   ),
                 ),
@@ -89,7 +42,7 @@ class DaftarUmum extends StatelessWidget {
                     "Belum\nTerdaftar",
                     Icons.person_add,
                     const LinearGradient(
-                      colors: [Color.fromARGB(255, 34, 13, 225), Color.fromARGB(255, 66, 2, 139)],
+                      colors: [Color(0xFF1E0DE1), Color(0xFF42028B)],
                     ),
                     UmumBelumTerdaftar(),
                   ),
@@ -112,8 +65,9 @@ class DaftarUmum extends StatelessWidget {
     return InkWell(
       onTap: () =>
           Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
+      borderRadius: BorderRadius.circular(24),
       child: Container(
-        height: 190, // Sedikit ditambah agar tulisan 2 baris muat
+        height: 190,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: gradient,

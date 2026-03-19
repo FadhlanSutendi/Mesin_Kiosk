@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../dashboard.dart';
 import '../../../widgets/struk.dart';
-
-// ─── Theme constants (identik dengan file lain) ───────────────────────────────
-const _kNavy = Color(0xFF00155E);
-const _kNavy2 = Color(0xFF00155E);
-const _kBlue1 = Color(0xFF00155E);
-const _kBlue2 = Color(0xFF00155E);
-const _kNeutral50 = Color(0xFFF4F6FA);
-const _kNeutral100 = Color(0xFFEAEDF3);
-const _kNeutral300 = Color(0xFFCDD1DC);
-const _kNeutral500 = Color(0xFF8A90A0);
-const _kText = Color(0xFF00155E);
-const _kTextSub = Color(0xFF5A6070);
-const _kTextHint = Color(0xFFB0B5C0);
-const _kWhite = Colors.white;
+import '../../../widgets/app_colors.dart';
+import '../../../widgets/kiosk_navbar.dart';
+import '../../../widgets/common_widgets.dart';
 
 // ─── Main widget ──────────────────────────────────────────────────────────────
 class DaftarSpesialis extends StatefulWidget {
@@ -75,11 +64,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [_kNavy, _kNavy2],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: AppColors.navyGradient,
                 ),
                 child: Row(
                   children: [
@@ -91,7 +76,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.check_circle_rounded,
-                          color: _kWhite, size: 20),
+                          color: AppColors.white, size: 20),
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -101,7 +86,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                         SizedBox(height: 2),
                         Text('Anda terdaftar ke poli spesialis',
                             style:
@@ -113,13 +98,14 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: _AntrianBadge(noAntrian: '27 S', estimasi: '± 30 mnt'),
+                child: AntrianBadge(noAntrian: '27 S', estimasi: '± 30 mnt'),
               ),
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 14, 20, 16),
                 child: Text(
                   'Silakan menunggu di ruang tunggu. Nomor antrian Anda akan dipanggil melalui layar dan pengeras suara.',
-                  style: TextStyle(fontSize: 13, color: _kTextSub, height: 1.6),
+                  style: TextStyle(
+                      fontSize: 13, color: AppColors.textSub, height: 1.6),
                 ),
               ),
               Padding(
@@ -127,7 +113,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: _OutlineButton(
+                      child: OutlineBtn(
                         label: 'Tutup',
                         onPressed: () => Navigator.pop(ctx),
                       ),
@@ -135,7 +121,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                     const SizedBox(width: 10),
                     Expanded(
                       flex: 2,
-                      child: _GradientButton(
+                      child: GradientButton(
                         label: 'Lihat Struk',
                         icon: Icons.receipt_long_rounded,
                         onPressed: () {
@@ -180,7 +166,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(ctx),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kBlue1,
+                      backgroundColor: AppColors.blue1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -188,13 +174,14 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.close_rounded, size: 14, color: _kWhite),
+                        Icon(Icons.close_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Tutup',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                       ],
                     ),
                   ),
@@ -208,7 +195,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                       _cetakStruk(noAntrian);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kBlue1,
+                      backgroundColor: AppColors.blue1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -216,13 +203,14 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.print_rounded, size: 14, color: _kWhite),
+                        Icon(Icons.print_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Cetak',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                       ],
                     ),
                   ),
@@ -239,15 +227,16 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: _kNavy,
+        backgroundColor: AppColors.navy,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         margin: const EdgeInsets.all(16),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: _kBlue2, size: 18),
+            const Icon(Icons.check_circle_rounded,
+                color: AppColors.blue2, size: 18),
             const SizedBox(width: 10),
             Text('Struk spesialis $noAntrian sedang dicetak…',
-                style: const TextStyle(fontSize: 13, color: _kWhite)),
+                style: const TextStyle(fontSize: 13, color: AppColors.white)),
           ],
         ),
       ),
@@ -262,73 +251,16 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _kNeutral50,
+      backgroundColor: AppColors.neutral50,
       body: Column(
         children: [
-          _buildHeader(),
+          KioskNavbar(
+            title: 'Poli Spesialis',
+            subtitle: 'Pilih spesialis dan dokter yang ingin Anda tuju',
+            backLabel: 'Menu Pendaftaran',
+          ),
           Expanded(child: _buildBody()),
         ],
-      ),
-    );
-  }
-
-  // ─── Header dark navy ─────────────────────────────────────────────────────
-  Widget _buildHeader() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_kNavy, _kNavy2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: _kWhite, size: 22),
-                    onPressed: () => Navigator.maybePop(context),
-                  ),
-                  const Text('Menu Pendaftaran',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: _kWhite)),
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 14, 20, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Poli Spesialis',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: _kWhite,
-                        letterSpacing: -0.3,
-                      )),
-                  SizedBox(height: 6),
-                  Text('Pilih spesialis dan dokter yang ingin Anda tuju',
-                      style: TextStyle(
-                          fontSize: 13, color: Colors.white60, height: 1.4)),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -341,7 +273,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
         const SizedBox(height: 4),
 
         // ── Pilih Spesialis ──
-        const _SectionLabel('PILIH SPESIALIS'),
+        const SectionLabel('PILIH SPESIALIS'),
         const SizedBox(height: 10),
         _buildDropdownField(
           icon: Icons.biotech_outlined,
@@ -361,7 +293,7 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
         const SizedBox(height: 12),
 
         // ── Pilih Dokter ──
-        const _SectionLabel('PILIH DOKTER'),
+        const SectionLabel('PILIH DOKTER'),
         const SizedBox(height: 10),
         _buildDropdownField(
           icon: Icons.person_outline_rounded,
@@ -378,14 +310,14 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
         const SizedBox(height: 24),
 
         // ── Ringkasan ──
-        const _SectionLabel('RINGKASAN KUNJUNGAN'),
+        const SectionLabel('RINGKASAN KUNJUNGAN'),
         const SizedBox(height: 10),
         _buildRingkasanCard(),
 
         const SizedBox(height: 28),
 
         // ── Tombol daftar ──
-        _GradientButton(
+        GradientButton(
           label: 'Daftarkan Sekarang',
           icon: Icons.how_to_reg_rounded,
           height: 54,
@@ -409,9 +341,9 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kNeutral300, width: 0.5),
+        border: Border.all(color: AppColors.neutral300, width: 0.5),
       ),
       child: Row(
         children: [
@@ -420,33 +352,33 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [_kBlue1, _kBlue2],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppColors.blueGradient,
               borderRadius: BorderRadius.circular(11),
             ),
-            child: Icon(icon, color: _kWhite, size: 18),
+            child: Icon(icon, color: AppColors.white, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: DropdownButtonFormField<String>(
               value: value,
               style: const TextStyle(
-                  fontSize: 14, color: _kText, fontWeight: FontWeight.w600),
+                  fontSize: 14,
+                  color: AppColors.text,
+                  fontWeight: FontWeight.w600),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 labelText: label,
-                labelStyle: const TextStyle(fontSize: 12, color: _kTextSub),
+                labelStyle:
+                    const TextStyle(fontSize: 12, color: AppColors.textSub),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 hintText: hint,
-                hintStyle: const TextStyle(fontSize: 13, color: _kTextHint),
+                hintStyle:
+                    const TextStyle(fontSize: 13, color: AppColors.textHint),
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),
               icon: const Icon(Icons.keyboard_arrow_down_rounded,
-                  color: _kNeutral500),
-              dropdownColor: _kWhite,
+                  color: AppColors.neutral500),
+              dropdownColor: AppColors.white,
               borderRadius: BorderRadius.circular(16),
               isExpanded: true,
               items: items
@@ -468,9 +400,9 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
   Widget _buildRingkasanCard() {
     return Container(
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kNeutral100, width: 0.5),
+        border: Border.all(color: AppColors.neutral100, width: 0.5),
       ),
       child: Column(
         children: [
@@ -525,7 +457,8 @@ class _RingkasanRow extends StatelessWidget {
       decoration: BoxDecoration(
         border: isLast
             ? null
-            : const Border(bottom: BorderSide(color: _kNeutral100, width: 0.5)),
+            : const Border(
+                bottom: BorderSide(color: AppColors.neutral100, width: 0.5)),
       ),
       child: Row(
         children: [
@@ -533,10 +466,10 @@ class _RingkasanRow extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: _kNeutral50,
+              color: AppColors.neutral50,
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(icon, size: 16, color: _kNeutral500),
+            child: Icon(icon, size: 16, color: AppColors.neutral500),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -544,198 +477,17 @@ class _RingkasanRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: const TextStyle(fontSize: 11, color: _kTextSub)),
+                    style: const TextStyle(
+                        fontSize: 11, color: AppColors.textSub)),
                 const SizedBox(height: 2),
                 Text(value,
                     style: TextStyle(
                       fontSize: 13,
-                      color: valueColor ?? _kText,
+                      color: valueColor ?? AppColors.text,
                       fontWeight: FontWeight.w600,
                     )),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Section label ────────────────────────────────────────────────────────────
-class _SectionLabel extends StatelessWidget {
-  final String text;
-  const _SectionLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: _kNeutral500,
-            letterSpacing: 1.2));
-  }
-}
-
-// ─── Gradient button ──────────────────────────────────────────────────────────
-class _GradientButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback onPressed;
-  final double height;
-  final double fontSize;
-
-  const _GradientButton({
-    required this.label,
-    required this.onPressed,
-    this.icon,
-    this.height = 48,
-    this.fontSize = 13,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [_kBlue1, _kBlue2],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: _kBlue1.withOpacity(0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            foregroundColor: _kWhite,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18),
-                const SizedBox(width: 8),
-              ],
-              Text(label,
-                  style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.w700)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Outline button ───────────────────────────────────────────────────────────
-class _OutlineButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback onPressed;
-
-  const _OutlineButton(
-      {required this.label, required this.onPressed, this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _kTextSub,
-          side: const BorderSide(color: _kNeutral300, width: 1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: 16),
-              const SizedBox(width: 8),
-            ],
-            Text(label,
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Antrian badge ────────────────────────────────────────────────────────────
-class _AntrianBadge extends StatelessWidget {
-  final String noAntrian;
-  final String estimasi;
-
-  const _AntrianBadge({required this.noAntrian, required this.estimasi});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [_kBlue1, _kBlue2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('ANTRIAN ANDA',
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white70,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                Text(noAntrian,
-                    style: const TextStyle(
-                      fontSize: 40,
-                      color: _kWhite,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 2,
-                    )),
-              ],
-            ),
-          ),
-          Container(width: 0.5, height: 50, color: Colors.white30),
-          const SizedBox(width: 20),
-          Column(
-            children: [
-              const Text('ESTIMASI',
-                  style: TextStyle(
-                      fontSize: 10, color: Colors.white70, letterSpacing: 0.8)),
-              const SizedBox(height: 4),
-              Text(estimasi,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      color: _kWhite,
-                      fontWeight: FontWeight.w700)),
-            ],
           ),
         ],
       ),

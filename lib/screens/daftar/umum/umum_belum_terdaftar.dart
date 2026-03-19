@@ -6,20 +6,9 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import '../../dashboard.dart';
 import '../../../widgets/struk.dart';
-
-// ─── Theme constants (identik dengan UmumTerdaftar) ───────────────────────────
-const _kNavy = Color(0xFF00155E);
-const _kNavy2 = Color(0xFF00155E);
-const _kBlue1 = Color(0xFF00155E);
-const _kBlue2 = Color(0xFF00155E);
-const _kNeutral50 = Color(0xFFF4F6FA);
-const _kNeutral100 = Color(0xFFEAEDF3);
-const _kNeutral300 = Color(0xFFCDD1DC);
-const _kNeutral500 = Color(0xFF8A90A0);
-const _kText = Color(0xFF00155E);
-const _kTextSub = Color(0xFF5A6070);
-const _kTextHint = Color(0xFFB0B5C0);
-const _kWhite = Colors.white;
+import '../../../widgets/app_colors.dart';
+import '../../../widgets/kiosk_navbar.dart';
+import '../../../widgets/common_widgets.dart';
 
 // ─── Main widget ──────────────────────────────────────────────────────────────
 class UmumBelumTerdaftar extends StatefulWidget {
@@ -143,25 +132,28 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
     final lanjut = await showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.85),
-      builder: (ctx) => Dialog(
+      builder: (ctx) => Dialog.fullscreen(
         backgroundColor: Colors.black,
-        insetPadding: const EdgeInsets.all(12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: SizedBox(
-            height: MediaQuery.of(ctx).size.height * 0.82,
-            child: Stack(
+        child: Stack(
+          fit: StackFit.expand,
               children: [
-                RTCVideoView(renderer),
-                Container(color: Colors.black.withOpacity(0.18)),
+                RTCVideoView(renderer, objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: _FaceScannerOverlayPainter(
+                      scanWidth: 420,
+                      scanHeight: 560,
+                      borderRadius: 20,
+                    ),
+                  ),
+                ),
                 Center(
                   child: Container(
-                    width: 240,
-                    height: 300,
+                    width: 420,
+                    height: 560,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _kWhite, width: 2.2),
+                      border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
                     ),
                   ),
                 ),
@@ -175,7 +167,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                       children: [
                         IconButton(
                           onPressed: () => Navigator.pop(ctx, false),
-                          icon: const Icon(Icons.close_rounded, color: _kWhite),
+                          icon: const Icon(Icons.close_rounded, color: AppColors.white),
                         ),
                         const Expanded(
                           child: Text(
@@ -184,7 +176,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: _kWhite,
+                              color: AppColors.white,
                             ),
                           ),
                         ),
@@ -194,19 +186,23 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                   ),
                 ),
                 Positioned(
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                  child: Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.62),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.18),
-                        width: 1,
-                      ),
-                    ),
+                  left: 0,
+                  right: 0,
+                  bottom: 24,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.62),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.18),
+                            width: 1,
+                          ),
+                        ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -214,7 +210,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                           'Posisikan wajah di dalam frame, lalu tekan Capture Demo.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: _kWhite,
+                            color: AppColors.white,
                             fontSize: 12,
                             height: 1.45,
                           ),
@@ -223,15 +219,17 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                         Row(
                           children: [
                             Expanded(
-                              child: _OutlineButton(
+                              child: OutlineBtn(
                                 label: 'Batal',
+                                textColor: AppColors.white,
+                                borderColor: AppColors.white.withOpacity(0.5),
                                 onPressed: () => Navigator.pop(ctx, false),
                               ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
                               flex: 2,
-                              child: _GradientButton(
+                              child: GradientButton(
                                 label: 'Capture Demo',
                                 icon: Icons.camera_alt_rounded,
                                 onPressed: () => Navigator.pop(ctx, true),
@@ -243,9 +241,9 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -328,35 +326,35 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
       const Rect.fromLTWH(70, 70, 500, 620),
       const Radius.circular(28),
     );
-    canvas.drawRRect(frameRect, Paint()..color = _kWhite.withOpacity(0.9));
+    canvas.drawRRect(frameRect, Paint()..color = AppColors.white.withOpacity(0.9));
     canvas.drawRRect(
       frameRect,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 4
-        ..color = _kBlue1.withOpacity(0.25),
+        ..color = AppColors.blue1.withOpacity(0.25),
     );
 
     canvas.drawCircle(
       const Offset(320, 300),
       96,
-      Paint()..color = _kBlue1.withOpacity(0.18),
+      Paint()..color = AppColors.blue1.withOpacity(0.18),
     );
     canvas.drawCircle(
       const Offset(320, 295),
       54,
-      Paint()..color = _kBlue1.withOpacity(0.35),
+      Paint()..color = AppColors.blue1.withOpacity(0.35),
     );
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         const Rect.fromLTWH(215, 380, 210, 180),
         const Radius.circular(90),
       ),
-      Paint()..color = _kBlue1.withOpacity(0.30),
+      Paint()..color = AppColors.blue1.withOpacity(0.30),
     );
 
     const titleStyle = TextStyle(
-      color: _kText,
+      color: AppColors.text,
       fontSize: 28,
       fontWeight: FontWeight.w700,
     );
@@ -384,17 +382,12 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
     return showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withOpacity(0.85),
-      builder: (ctx) => Dialog(
+      builder: (ctx) => Dialog.fullscreen(
         backgroundColor: Colors.black,
-        insetPadding: const EdgeInsets.all(12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: SizedBox(
-            height: MediaQuery.of(ctx).size.height * 0.82,
-            child: Stack(
-              children: [
-                Container(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
@@ -403,23 +396,32 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Container(
-                    width: 240,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _kWhite, width: 2.2),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.person_rounded,
-                        color: Colors.white70,
-                        size: 82,
-                      ),
-                    ),
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _FaceScannerOverlayPainter(
+                  scanWidth: 420,
+                  scanHeight: 560,
+                  borderRadius: 20,
+                ),
+              ),
+            ),
+            Center(
+              child: Container(
+                width: 420,
+                height: 560,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.person_rounded,
+                    color: Colors.white70,
+                    size: 100,
                   ),
                 ),
+              ),
+            ),
                 Positioned(
                   top: 10,
                   left: 10,
@@ -430,7 +432,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                       children: [
                         IconButton(
                           onPressed: () => Navigator.pop(ctx, false),
-                          icon: const Icon(Icons.close_rounded, color: _kWhite),
+                          icon: const Icon(Icons.close_rounded, color: AppColors.white),
                         ),
                         const Expanded(
                           child: Text(
@@ -439,7 +441,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: _kWhite,
+                              color: AppColors.white,
                             ),
                           ),
                         ),
@@ -448,11 +450,15 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     ),
                   ),
                 ),
-                Positioned(
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 24,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
                   child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.62),
@@ -470,7 +476,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                               'Kamera simulasi aktif. Tekan Capture Demo untuk lanjut alur kiosk.',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            color: _kWhite,
+                            color: AppColors.white,
                             fontSize: 12,
                             height: 1.45,
                           ),
@@ -479,15 +485,17 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                         Row(
                           children: [
                             Expanded(
-                              child: _OutlineButton(
+                              child: OutlineBtn(
                                 label: 'Batal',
+                                textColor: AppColors.white,
+                                borderColor: AppColors.white.withOpacity(0.5),
                                 onPressed: () => Navigator.pop(ctx, false),
                               ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
                               flex: 2,
-                              child: _GradientButton(
+                              child: GradientButton(
                                 label: 'Capture Demo',
                                 icon: Icons.camera_alt_rounded,
                                 onPressed: () => Navigator.pop(ctx, true),
@@ -499,9 +507,9 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -529,11 +537,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [_kNavy, _kNavy2],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: AppColors.navyGradient,
                 ),
                 child: Row(
                   children: [
@@ -545,7 +549,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.confirmation_number_rounded,
-                          color: _kWhite, size: 20),
+                          color: AppColors.white, size: 20),
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -555,7 +559,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                         SizedBox(height: 2),
                         Text('Pendaftaran berhasil diproses',
                             style:
@@ -567,13 +571,13 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: _AntrianBadge(noAntrian: '46 F', estimasi: '± 15 mnt'),
+                child: AntrianBadge(noAntrian: '46 F', estimasi: '± 15 mnt'),
               ),
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 14, 20, 16),
                 child: Text(
                   'Silakan menunggu di ruang tunggu. Nomor antrian Anda akan dipanggil melalui layar dan pengeras suara.',
-                  style: TextStyle(fontSize: 13, color: _kTextSub, height: 1.6),
+                  style: TextStyle(fontSize: 13, color: AppColors.textSub, height: 1.6),
                 ),
               ),
               Padding(
@@ -581,7 +585,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: _OutlineButton(
+                      child: OutlineBtn(
                         label: 'Tutup',
                         onPressed: () => Navigator.pop(ctx),
                       ),
@@ -589,7 +593,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     const SizedBox(width: 10),
                     Expanded(
                       flex: 2,
-                      child: _GradientButton(
+                      child: GradientButton(
                         label: 'Cetak Struk',
                         icon: Icons.print_rounded,
                         onPressed: () {
@@ -638,7 +642,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(ctx),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kBlue1,
+                      backgroundColor: AppColors.blue1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -646,13 +650,13 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.close_rounded, size: 14, color: _kWhite),
+                        Icon(Icons.close_rounded, size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Kembali',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                       ],
                     ),
                   ),
@@ -666,7 +670,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                       _cetakStruk(noAntrian);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kBlue1,
+                      backgroundColor: AppColors.blue1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -674,13 +678,13 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.print_rounded, size: 14, color: _kWhite),
+                        Icon(Icons.print_rounded, size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Cetak',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                       ],
                     ),
                   ),
@@ -697,15 +701,15 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: _kNavy,
+        backgroundColor: AppColors.navy,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         margin: const EdgeInsets.all(16),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: _kBlue2, size: 18),
+            const Icon(Icons.check_circle_rounded, color: AppColors.blue2, size: 18),
             const SizedBox(width: 10),
             Text('Struk antrian $noAntrian sedang dicetak…',
-                style: const TextStyle(fontSize: 13, color: _kWhite)),
+                style: const TextStyle(fontSize: 13, color: AppColors.white)),
           ],
         ),
       ),
@@ -720,73 +724,16 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _kNeutral50,
+      backgroundColor: AppColors.neutral50,
       body: Column(
         children: [
-          _buildHeader(),
+          KioskNavbar(
+            title: 'Pasien Baru',
+            subtitle: 'Lengkapi data diri Anda untuk mendapatkan nomor antrian',
+            backLabel: 'Menu Pendaftaran',
+          ),
           Expanded(child: _buildBody()),
         ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_kNavy, _kNavy2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: _kWhite, size: 22),
-                    onPressed: () => Navigator.maybePop(context),
-                  ),
-                  const Text('Menu Pendaftaran',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: _kWhite)),
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 14, 20, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Pasien Baru',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: _kWhite,
-                        letterSpacing: -0.3,
-                      )),
-                  SizedBox(height: 6),
-                  Text(
-                      'Lengkapi data diri Anda untuk mendapatkan nomor antrian',
-                      style: TextStyle(
-                          fontSize: 13, color: Colors.white60, height: 1.4)),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -831,12 +778,12 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: _kNeutral300, width: 0.5),
+        border: Border.all(color: AppColors.neutral300, width: 0.5),
         boxShadow: [
           BoxShadow(
-            color: _kNavy.withOpacity(0.05),
+            color: AppColors.navy.withOpacity(0.05),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -955,9 +902,11 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
             _buildGenderSelector(),
           ],
           const SizedBox(height: 20),
-          _buildInfoNote(),
+          const InfoNote(
+            'Pastikan semua data yang Anda masukkan sudah benar. Data ini akan digunakan untuk keperluan medis.',
+          ),
           const SizedBox(height: 24),
-          _GradientButton(
+          GradientButton(
             label: 'Daftar Sekarang',
             icon: Icons.check_circle_outline_rounded,
             height: 54,
@@ -974,9 +923,9 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
       constraints: const BoxConstraints(minHeight: 76),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kNeutral300, width: 0.5),
+        border: Border.all(color: AppColors.neutral300, width: 0.5),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -985,14 +934,10 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [_kBlue1, _kBlue2],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppColors.blueGradient,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.wc_rounded, color: _kWhite, size: 16),
+            child: const Icon(Icons.wc_rounded, color: AppColors.white, size: 16),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -1001,7 +946,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
               children: [
                 const Text(
                   'Jenis Kelamin',
-                  style: TextStyle(fontSize: 11, color: _kTextSub),
+                  style: TextStyle(fontSize: 11, color: AppColors.textSub),
                 ),
                 const SizedBox(height: 8),
                 _GenderToggle(
@@ -1022,12 +967,12 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: _kNeutral300, width: 0.5),
+        border: Border.all(color: AppColors.neutral300, width: 0.5),
         boxShadow: [
           BoxShadow(
-            color: _kNavy.withOpacity(0.05),
+            color: AppColors.navy.withOpacity(0.05),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -1051,19 +996,19 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [_kNeutral50, _kBlue1.withOpacity(0.08)],
+                  colors: [AppColors.neutral50, AppColors.blue1.withOpacity(0.08)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: _kNeutral100, width: 1),
+                border: Border.all(color: AppColors.neutral100, width: 1),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: _fotoBytes != null
                     ? Image.memory(_fotoBytes!, fit: BoxFit.cover)
                     : Container(
-                        color: _kWhite,
+                        color: AppColors.white,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -1073,15 +1018,15 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    _kBlue1.withOpacity(0.12),
-                                    _kBlue2.withOpacity(0.18),
+                                    AppColors.blue1.withOpacity(0.12),
+                                    AppColors.blue2.withOpacity(0.18),
                                   ],
                                 ),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
                                 Icons.person_rounded,
-                                color: _kNeutral500,
+                                color: AppColors.neutral500,
                                 size: 42,
                               ),
                             ),
@@ -1092,7 +1037,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                                   : 'Belum ada foto',
                               style: const TextStyle(
                                 fontSize: 13,
-                                color: _kTextSub,
+                                color: AppColors.textSub,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -1102,7 +1047,7 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: _kTextHint,
+                                color: AppColors.textHint,
                                 height: 1.5,
                               ),
                             ),
@@ -1130,51 +1075,19 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     _fotoBytes != null
                         ? 'Foto berhasil diambil'
                         : 'Foto demo tersimpan',
-                    style: const TextStyle(fontSize: 12, color: _kTextSub)),
+                    style: const TextStyle(fontSize: 12, color: AppColors.textSub)),
               ],
             ),
           ],
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
-            child: _OutlineButton(
+            child: OutlineBtn(
               label: (_fotoBytes != null || _fotoDemoDiambil)
                   ? 'Ambil Ulang Foto'
                   : 'Buka Kamera',
               icon: Icons.camera_alt_rounded,
               onPressed: _ambilFoto,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoNote() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: _kNeutral50,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: _kNeutral100, width: 0.5),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            margin: const EdgeInsets.only(top: 5),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [_kBlue1, _kBlue2]),
-              borderRadius: BorderRadius.circular(3),
-            ),
-          ),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text(
-              'Pastikan semua data yang Anda masukkan sudah benar. Data ini akan digunakan untuk keperluan medis.',
-              style: TextStyle(fontSize: 12, color: _kTextSub, height: 1.6),
             ),
           ),
         ],
@@ -1260,16 +1173,11 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return Dialog.fullscreen(
       backgroundColor: Colors.black,
-      insetPadding: const EdgeInsets.all(12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.82,
-          child: Stack(
-            children: [
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
               if (_initialized)
                 CameraPreview(_controller)
               else if (_cameraError != null)
@@ -1280,7 +1188,7 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                       _cameraError!,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        color: _kWhite,
+                        color: AppColors.white,
                         fontSize: 13,
                         height: 1.5,
                       ),
@@ -1289,15 +1197,24 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                 )
               else
                 const Center(
-                  child: CircularProgressIndicator(color: _kWhite),
+                  child: CircularProgressIndicator(color: AppColors.white),
                 ),
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _FaceScannerOverlayPainter(
+                    scanWidth: 420,
+                    scanHeight: 560,
+                    borderRadius: 20,
+                  ),
+                ),
+              ),
               Center(
                 child: Container(
-                  width: 240,
-                  height: 300,
+                  width: 420,
+                  height: 560,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: _kWhite, width: 2.2),
+                    border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
                   ),
                 ),
               ),
@@ -1311,7 +1228,7 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                     children: [
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close_rounded, color: _kWhite),
+                        icon: const Icon(Icons.close_rounded, color: AppColors.white),
                       ),
                       const Expanded(
                         child: Text(
@@ -1320,7 +1237,7 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: _kWhite,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
@@ -1330,19 +1247,23 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                 ),
               ),
               Positioned(
-                left: 16,
-                right: 16,
-                bottom: 16,
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.62),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.18),
-                      width: 1,
-                    ),
-                  ),
+                left: 0,
+                right: 0,
+                bottom: 24,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 500),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.62),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.18),
+                          width: 1,
+                        ),
+                      ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1350,7 +1271,7 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                         'Posisikan wajah pasien di dalam frame, lalu tekan Capture Demo',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: _kWhite,
+                          color: AppColors.white,
                           fontSize: 12,
                           height: 1.45,
                         ),
@@ -1359,15 +1280,17 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                       Row(
                         children: [
                           Expanded(
-                            child: _OutlineButton(
+                            child: OutlineBtn(
                               label: 'Batal',
+                              textColor: AppColors.white,
+                              borderColor: AppColors.white.withOpacity(0.5),
                               onPressed: () => Navigator.pop(context),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             flex: 2,
-                            child: _GradientButton(
+                            child: GradientButton(
                               label:
                                   _capturing ? 'Memproses...' : 'Capture Demo',
                               icon: Icons.camera_alt_rounded,
@@ -1382,9 +1305,9 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -1432,16 +1355,16 @@ class _StatefulInputCardState extends State<_StatefulInputCard> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _isFocused ? _kBlue1 : _kNeutral300,
+          color: _isFocused ? AppColors.blue1 : AppColors.neutral300,
           width: _isFocused ? 1.5 : 0.5,
         ),
         boxShadow: _isFocused
             ? [
                 BoxShadow(
-                    color: _kBlue1.withOpacity(0.12),
+                    color: AppColors.blue1.withOpacity(0.12),
                     blurRadius: 12,
                     offset: const Offset(0, 4))
               ]
@@ -1454,14 +1377,10 @@ class _StatefulInputCardState extends State<_StatefulInputCard> {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [_kBlue1, _kBlue2],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: AppColors.blueGradient,
               borderRadius: BorderRadius.circular(11),
             ),
-            child: Icon(widget.icon, color: _kWhite, size: 18),
+            child: Icon(widget.icon, color: AppColors.white, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1470,13 +1389,13 @@ class _StatefulInputCardState extends State<_StatefulInputCard> {
               focusNode: _focusNode,
               keyboardType: widget.keyboardType,
               style: const TextStyle(
-                  fontSize: 14, color: _kText, fontWeight: FontWeight.w600),
+                  fontSize: 14, color: AppColors.text, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: widget.hint,
-                hintStyle: const TextStyle(fontSize: 13, color: _kTextHint),
+                hintStyle: const TextStyle(fontSize: 13, color: AppColors.textHint),
                 labelText: widget.label,
-                labelStyle: const TextStyle(fontSize: 12, color: _kTextSub),
+                labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSub),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),
@@ -1489,85 +1408,7 @@ class _StatefulInputCardState extends State<_StatefulInputCard> {
   }
 }
 
-// ─── Shared widgets ───────────────────────────────────────────────────────────
-
-class _AntrianBadge extends StatelessWidget {
-  final String noAntrian;
-  final String estimasi;
-
-  const _AntrianBadge({required this.noAntrian, required this.estimasi});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [_kBlue1, _kBlue2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('ANTRIAN ANDA',
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white70,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                Text(noAntrian,
-                    style: const TextStyle(
-                      fontSize: 40,
-                      color: _kWhite,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 2,
-                    )),
-              ],
-            ),
-          ),
-          Container(width: 0.5, height: 50, color: Colors.white30),
-          const SizedBox(width: 20),
-          Column(
-            children: [
-              const Text('ESTIMASI',
-                  style: TextStyle(
-                      fontSize: 10, color: Colors.white70, letterSpacing: 0.8)),
-              const SizedBox(height: 4),
-              Text(estimasi,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      color: _kWhite,
-                      fontWeight: FontWeight.w700)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  final String text;
-  const _SectionLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: _kNeutral500,
-            letterSpacing: 1.2));
-  }
-}
-
+// ─── Panel header ─────────────────────────────────────────────────────────────
 class _PanelHeader extends StatelessWidget {
   final String badge;
   final String title;
@@ -1584,14 +1425,14 @@ class _PanelHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionLabel(badge),
+        SectionLabel(badge),
         const SizedBox(height: 8),
         Text(
           title,
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: _kText,
+            color: AppColors.text,
             letterSpacing: -0.2,
           ),
         ),
@@ -1600,7 +1441,7 @@ class _PanelHeader extends StatelessWidget {
           subtitle,
           style: const TextStyle(
             fontSize: 13,
-            color: _kTextSub,
+            color: AppColors.textSub,
             height: 1.55,
           ),
         ),
@@ -1621,11 +1462,11 @@ class _GenderToggle extends StatelessWidget {
       height: 40,
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: _kText.withOpacity(0.82),
+        color: AppColors.text.withOpacity(0.82),
         borderRadius: BorderRadius.circular(999),
         boxShadow: [
           BoxShadow(
-            color: _kText.withOpacity(0.08),
+            color: AppColors.text.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -1673,7 +1514,7 @@ class _GenderToggleOption extends StatelessWidget {
         curve: Curves.easeOut,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: selected ? _kWhite : Colors.transparent,
+          color: selected ? AppColors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
         ),
         child: AnimatedDefaultTextStyle(
@@ -1681,7 +1522,7 @@ class _GenderToggleOption extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: selected ? _kText : _kWhite,
+            color: selected ? AppColors.text : AppColors.white,
           ),
           child: Text(label, overflow: TextOverflow.ellipsis),
         ),
@@ -1690,103 +1531,38 @@ class _GenderToggleOption extends StatelessWidget {
   }
 }
 
-class _GradientButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback onPressed;
-  final double height;
-  final double fontSize;
+class _FaceScannerOverlayPainter extends CustomPainter {
+  final double scanWidth;
+  final double scanHeight;
+  final double borderRadius;
 
-  const _GradientButton({
-    required this.label,
-    required this.onPressed,
-    this.icon,
-    this.height = 48,
-    this.fontSize = 13,
+  _FaceScannerOverlayPainter({
+    required this.scanWidth,
+    required this.scanHeight,
+    required this.borderRadius,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [_kBlue1, _kBlue2],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: _kBlue1.withOpacity(0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
+  void paint(Canvas canvas, Size size) {
+    final bgPaint = Paint()..color = Colors.black.withOpacity(0.65);
+    final transparentPaint = Paint()
+      ..color = Colors.transparent
+      ..blendMode = BlendMode.clear;
+
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
+
+    final rectPath = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: Offset(size.width / 2, size.height / 2),
+          width: scanWidth,
+          height: scanHeight,
         ),
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            foregroundColor: _kWhite,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18),
-                const SizedBox(width: 8),
-              ],
-              Text(label,
-                  style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.w700)),
-            ],
-          ),
-        ),
-      ),
-    );
+        Radius.circular(borderRadius),
+      ));
+    canvas.drawPath(rectPath, transparentPaint);
   }
-}
-
-class _OutlineButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback onPressed;
-
-  const _OutlineButton(
-      {required this.label, required this.onPressed, this.icon});
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _kTextSub,
-          side: const BorderSide(color: _kNeutral300, width: 1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: 16),
-              const SizedBox(width: 8),
-            ],
-            Text(label,
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-          ],
-        ),
-      ),
-    );
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

@@ -4,20 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../dashboard.dart';
 import '../../widgets/struk.dart';
-
-// ─── Theme constants (identik dengan file lain) ───────────────────────────────
-const _kNavy = Color(0xFF00155E);
-const _kNavy2 = Color(0xFF00155E);
-const _kBlue1 = Color(0xFF00155E);
-const _kBlue2 = Color(0xFF00155E);
-const _kNeutral50 = Color(0xFFF4F6FA);
-const _kNeutral100 = Color(0xFFEAEDF3);
-const _kNeutral300 = Color(0xFFCDD1DC);
-const _kNeutral500 = Color(0xFF8A90A0);
-const _kText = Color(0xFF00155E);
-const _kTextSub = Color(0xFF5A6070);
-const _kTextHint = Color(0xFFB0B5C0);
-const _kWhite = Colors.white;
+import '../../widgets/app_colors.dart';
+import '../../widgets/kiosk_navbar.dart';
+import '../../widgets/common_widgets.dart';
 
 // ─── Main widget ──────────────────────────────────────────────────────────────
 class ScanBarcodeScreen extends StatefulWidget {
@@ -101,61 +90,73 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
       barrierColor: Colors.black.withOpacity(0.85),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setModalState) {
-          return Dialog(
+          return Dialog.fullscreen(
             backgroundColor: Colors.black,
-            insetPadding: const EdgeInsets.all(12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SizedBox(
-                height: MediaQuery.of(ctx).size.height * 0.82,
-                child: Stack(
+            child: Stack(
+              fit: StackFit.expand,
                   children: [
                     CameraPreview(controller),
-                    Container(
-                      color: Colors.black.withOpacity(0.18),
-                    ),
 
-                    // Overlay frame sederhana agar area scan terlihat jelas.
-                    Center(
-                      child: Container(
-                        width: 240,
-                        height: 240,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: _kWhite, width: 2.2),
+                    // ── Scanner Overlay (Dimming) ──
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: _ScannerOverlayPainter(
+                          scanWidth: 320,
+                          scanHeight: 320,
+                          borderRadius: 24,
                         ),
                       ),
                     ),
 
+                    // ── Frame Viewfinder ──
+                    Center(
+                      child: Container(
+                        width: 320,
+                        height: 320,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.5),
+                            width: 1,
+                          ),
+                        ),
+                        child: Stack(
+                          children: _buildCorners(),
+                        ),
+                      ),
+                    ),
+
+                    // ── Laser Scanning Line ──
+                    const _ScanningLine(width: 320, height: 320),
+
+                    // ── Top Controls ──
                     Positioned(
-                      top: 10,
-                      left: 10,
-                      right: 10,
+                      top: 15,
+                      left: 15,
+                      right: 15,
                       child: SafeArea(
                         bottom: false,
                         child: Row(
                           children: [
-                            IconButton(
-                              onPressed: () => Navigator.pop(ctx, false),
-                              icon: const Icon(Icons.close_rounded,
-                                  color: _kWhite),
-                            ),
+                            _CircularCloseButton(
+                                onTap: () => Navigator.pop(ctx, false)),
                             const Expanded(
                               child: Text(
-                                'Camera Scan Barcode',
+                                'Scan Barcode',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: _kWhite,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () async {
+                            _CircularCloseButton(
+                              icon: flashOn
+                                  ? Icons.flash_off_rounded
+                                  : Icons.flash_on_rounded,
+                              onTap: () async {
                                 final nextMode =
                                     flashOn ? FlashMode.off : FlashMode.torch;
                                 try {
@@ -165,35 +166,39 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                                   if (!mounted) return;
                                   messenger.showSnackBar(
                                     const SnackBar(
-                                      content: Text(
-                                          'Flash tidak didukung perangkat ini.'),
-                                    ),
+                                        content: Text('Flash tidak didukung.')),
                                   );
                                 }
                               },
-                              icon: Icon(
-                                flashOn
-                                    ? Icons.flash_off_rounded
-                                    : Icons.flash_on_rounded,
-                                color: _kWhite,
-                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
 
+                    // ── Bottom Panel ──
                     Positioned(
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                      child: Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.62),
-                          borderRadius: BorderRadius.circular(16),
+                      left: 0,
+                      right: 0,
+                      bottom: 20,
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.8),
+                              Colors.black.withOpacity(0.6),
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.18),
+                            color: Colors.white.withOpacity(0.1),
                             width: 1,
                           ),
                         ),
@@ -201,28 +206,30 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
-                              'Kamera aktif. Arahkan ke barcode lalu tekan Capture Demo.',
+                              'Posisikan barcode di dalam kotak pindaian',
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: _kWhite,
-                                fontSize: 12,
-                                height: 1.45,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 20),
                             Row(
                               children: [
                                 Expanded(
-                                  child: _OutlineButton(
+                                  child: OutlineBtn(
                                     label: 'Batal',
+                                    textColor: Colors.white,
+                                    borderColor: Colors.white.withOpacity(0.5),
                                     onPressed: () => Navigator.pop(ctx, false),
                                   ),
                                 ),
-                                const SizedBox(width: 10),
+                                const SizedBox(width: 12),
                                 Expanded(
                                   flex: 2,
-                                  child: _GradientButton(
-                                    label: 'Capture Demo',
+                                  child: GradientButton(
+                                    label: 'Ambil Foto',
                                     icon: Icons.camera_alt_rounded,
                                     onPressed: () => Navigator.pop(ctx, true),
                                   ),
@@ -233,9 +240,9 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         },
@@ -278,72 +285,96 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
       context: context,
       barrierColor: Colors.black.withOpacity(0.85),
       builder: (ctx) {
-        return Dialog(
+        return Dialog.fullscreen(
           backgroundColor: Colors.black,
-          insetPadding: const EdgeInsets.all(12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: SizedBox(
-              height: MediaQuery.of(ctx).size.height * 0.82,
-              child: Stack(
+          child: Stack(
+            fit: StackFit.expand,
                 children: [
-                  RTCVideoView(renderer),
-                  Container(
-                    color: Colors.black.withOpacity(0.18),
-                  ),
-                  Center(
-                    child: Container(
-                      width: 240,
-                      height: 240,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: _kWhite, width: 2.2),
+                  RTCVideoView(renderer, objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
+
+                  // ── Scanner Overlay (Dimming) ──
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: _ScannerOverlayPainter(
+                        scanWidth: 320,
+                        scanHeight: 320,
+                        borderRadius: 24,
                       ),
                     ),
                   ),
+
+                  // ── Frame Viewfinder ──
+                  Center(
+                    child: Container(
+                      width: 320,
+                      height: 320,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.5),
+                          width: 1,
+                        ),
+                      ),
+                      child: Stack(
+                        children: _buildCorners(),
+                      ),
+                    ),
+                  ),
+
+                  // ── Laser Scanning Line ──
+                  const _ScanningLine(width: 320, height: 320),
+
+                  // ── Top Controls ──
                   Positioned(
-                    top: 10,
-                    left: 10,
-                    right: 10,
+                    top: 15,
+                    left: 15,
+                    right: 15,
                     child: SafeArea(
                       bottom: false,
                       child: Row(
                         children: [
-                          IconButton(
-                            onPressed: () => Navigator.pop(ctx, false),
-                            icon:
-                                const Icon(Icons.close_rounded, color: _kWhite),
-                          ),
+                          _CircularCloseButton(onTap: () => Navigator.pop(ctx, false)),
                           const Expanded(
                             child: Text(
-                              'Camera Scan Barcode',
+                              'Scan Barcode',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: _kWhite,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 48),
+                          const SizedBox(width: 48), // Spacer for balance
                         ],
                       ),
                     ),
                   ),
+
+                  // ── Bottom Panel ──
                   Positioned(
-                    left: 16,
-                    right: 16,
-                    bottom: 16,
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.62),
-                        borderRadius: BorderRadius.circular(16),
+                    left: 0,
+                    right: 0,
+                    bottom: 20,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 500),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black.withOpacity(0.8),
+                            Colors.black.withOpacity(0.6),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                        borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.18),
+                          color: Colors.white.withOpacity(0.1),
                           width: 1,
                         ),
                       ),
@@ -351,28 +382,38 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Text(
-                            'Kamera Windows aktif. Arahkan ke barcode lalu tekan Capture Demo.',
+                            'Posisikan barcode di dalam kotak pindaian',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: _kWhite,
-                              fontSize: 12,
-                              height: 1.45,
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Kamera Windows Aktif',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.5),
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                           Row(
                             children: [
                               Expanded(
-                                child: _OutlineButton(
+                                child: OutlineBtn(
                                   label: 'Batal',
+                                  textColor: Colors.white,
+                                  borderColor: Colors.white.withOpacity(0.5),
                                   onPressed: () => Navigator.pop(ctx, false),
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 12),
                               Expanded(
                                 flex: 2,
-                                child: _GradientButton(
-                                  label: 'Capture Demo',
+                                child: GradientButton(
+                                  label: 'Ambil Foto',
                                   icon: Icons.camera_alt_rounded,
                                   onPressed: () => Navigator.pop(ctx, true),
                                 ),
@@ -383,9 +424,9 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         );
       },
@@ -430,7 +471,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(ctx),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kBlue1,
+                      backgroundColor: AppColors.blue1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -438,13 +479,14 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.close_rounded, size: 14, color: _kWhite),
+                        Icon(Icons.close_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Tutup',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                       ],
                     ),
                   ),
@@ -458,7 +500,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                       _cetakStruk(data['noAntrian'] ?? '-');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _kBlue1,
+                      backgroundColor: AppColors.blue1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -466,13 +508,14 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.print_rounded, size: 14, color: _kWhite),
+                        Icon(Icons.print_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Cetak',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: _kWhite)),
+                                color: AppColors.white)),
                       ],
                     ),
                   ),
@@ -489,15 +532,16 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: _kNavy,
+        backgroundColor: AppColors.navy,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         margin: const EdgeInsets.all(16),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: _kBlue2, size: 18),
+            const Icon(Icons.check_circle_rounded,
+                color: AppColors.blue2, size: 18),
             const SizedBox(width: 10),
             Text('Struk online $antrian sedang dicetak…',
-                style: const TextStyle(fontSize: 13, color: _kWhite)),
+                style: const TextStyle(fontSize: 13, color: AppColors.white)),
           ],
         ),
       ),
@@ -512,74 +556,31 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _kNeutral50,
-      body: Column(
+      body: Stack(
         children: [
-          _buildHeader(),
-          Expanded(child: _buildBody()),
+          // Background Image with Opacity
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Content
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Scan Barcode',
+                subtitle:
+                    'Arahkan kamera ke barcode pada kartu atau surat booking Anda',
+                backLabel: 'Pendaftaran Online',
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
         ],
-      ),
-    );
-  }
-
-  // ─── Header dark navy ─────────────────────────────────────────────────────
-  Widget _buildHeader() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_kNavy, _kNavy2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: _kWhite, size: 22),
-                    onPressed: () => Navigator.maybePop(context),
-                  ),
-                  const Text('Pendaftaran Online',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: _kWhite)),
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 14, 20, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Scan Barcode',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: _kWhite,
-                        letterSpacing: -0.3,
-                      )),
-                  SizedBox(height: 6),
-                  Text(
-                      'Arahkan kamera ke barcode pada kartu atau surat booking Anda',
-                      style: TextStyle(
-                          fontSize: 13, color: Colors.white60, height: 1.4)),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -609,16 +610,16 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
   Widget _buildScanArea() {
     return Container(
       decoration: BoxDecoration(
-        color: _kWhite,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _kNeutral100, width: 0.5),
+        border: Border.all(color: AppColors.neutral100, width: 0.5),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Column(
           children: [
             // Accent line
-            Container(height: 3, color: _kNavy),
+            Container(height: 3, color: AppColors.navy),
 
             Padding(
               padding: const EdgeInsets.all(20),
@@ -629,9 +630,10 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                     width: double.infinity,
                     height: 180,
                     decoration: BoxDecoration(
-                      color: _kNeutral50,
+                      color: AppColors.neutral50,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: _kNeutral100, width: 0.5),
+                      border:
+                          Border.all(color: AppColors.neutral100, width: 0.5),
                     ),
                     child: Stack(
                       alignment: Alignment.center,
@@ -653,16 +655,14 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                                           Color(0xFF22C55E),
                                         ],
                                       )
-                                    : const LinearGradient(
-                                        colors: [_kBlue1, _kBlue2],
-                                      ),
+                                    : AppColors.blueGradient,
                                 borderRadius: BorderRadius.circular(18),
                               ),
                               child: Icon(
                                 _sudahScan
                                     ? Icons.check_circle_rounded
                                     : Icons.qr_code_scanner_rounded,
-                                color: _kWhite,
+                                color: AppColors.white,
                                 size: 28,
                               ),
                             ),
@@ -674,7 +674,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                                 fontWeight: FontWeight.w700,
                                 color: _sudahScan
                                     ? const Color(0xFF16A34A)
-                                    : _kText,
+                                    : AppColors.text,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -683,7 +683,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                                   ? 'Data pendaftaran ditemukan'
                                   : 'Ketuk tombol di bawah untuk mulai',
                               style: const TextStyle(
-                                  fontSize: 11, color: _kNeutral500),
+                                  fontSize: 11, color: AppColors.neutral500),
                             ),
                           ],
                         ),
@@ -694,7 +694,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                   const SizedBox(height: 16),
 
                   // Tombol scan
-                  _GradientButton(
+                  GradientButton(
                     label: _sudahScan ? 'Scan Ulang' : 'Mulai Scan',
                     icon: _sudahScan
                         ? Icons.refresh_rounded
@@ -713,7 +713,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
 
   /// Corner bracket decorations pada viewfinder
   List<Widget> _buildCorners() {
-    const color = _kNeutral300;
+    const color = AppColors.neutral300;
     const size = 20.0;
     const thick = 2.5;
     const r = 6.0;
@@ -758,13 +758,13 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _SectionLabel('DATA PENDAFTARAN DITEMUKAN'),
+        const SectionLabel('DATA PENDAFTARAN DITEMUKAN'),
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            color: _kWhite,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _kNeutral100, width: 0.5),
+            border: Border.all(color: AppColors.neutral100, width: 0.5),
           ),
           child: Column(
             children: [
@@ -772,11 +772,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [_kNavy, _kNavy2],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: AppColors.navyGradient,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
@@ -788,15 +784,11 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [_kBlue1, _kBlue2],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: AppColors.blueGradient,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Icon(Icons.qr_code_2_rounded,
-                          color: _kWhite, size: 24),
+                          color: AppColors.white, size: 24),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -808,7 +800,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: _kWhite,
+                              color: AppColors.white,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -825,15 +817,14 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        gradient:
-                            const LinearGradient(colors: [_kBlue1, _kBlue2]),
+                        gradient: AppColors.blueGradient,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         data['noAntrian'] ?? '-',
                         style: const TextStyle(
                             fontSize: 13,
-                            color: _kWhite,
+                            color: AppColors.white,
                             fontWeight: FontWeight.w700),
                       ),
                     ),
@@ -865,7 +856,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
 
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: _GradientButton(
+                child: GradientButton(
                   label: 'Cetak Struk',
                   icon: Icons.receipt_long_rounded,
                   height: 50,
@@ -880,6 +871,7 @@ class _ScanBarcodeScreenState extends State<ScanBarcodeScreen> {
   }
 }
 
+// ─── Corner bracket painter ───────────────────────────────────────────────────
 // ─── Corner bracket painter ───────────────────────────────────────────────────
 class _CornerPainter extends CustomPainter {
   final Color color;
@@ -940,6 +932,109 @@ class _CornerPainter extends CustomPainter {
       old.color != color || old.top != top || old.left != left;
 }
 
+// ─── Scanner Overlay Painter ──────────────────────────────────────────────────
+/// Meredupkan area di luar viewfinder (crop area)
+class _ScannerOverlayPainter extends CustomPainter {
+  final double scanWidth;
+  final double scanHeight;
+  final double borderRadius;
+
+  _ScannerOverlayPainter({
+    required this.scanWidth,
+    required this.scanHeight,
+    required this.borderRadius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final backgroundPaint = Paint()..color = Colors.black.withOpacity(0.5);
+
+    // Path untuk seluruh area
+    final fullPath = Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    // Path untuk viewfinder (tengah)
+    final left = (size.width - scanWidth) / 2;
+    final top = (size.height - scanHeight) / 2;
+    final viewfinderRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(left, top, scanWidth, scanHeight),
+      Radius.circular(borderRadius),
+    );
+    final viewfinderPath = Path()..addRRect(viewfinderRect);
+
+    // Kombinasi (Subtract viewfinder from background)
+    final path = Path.combine(PathOperation.difference, fullPath, viewfinderPath);
+
+    canvas.drawPath(path, backgroundPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// ─── Scanning Line Widget ─────────────────────────────────────────────────────
+class _ScanningLine extends StatefulWidget {
+  final double width;
+  final double height;
+  const _ScanningLine({required this.width, required this.height});
+
+  @override
+  State<_ScanningLine> createState() => _ScanningLineState();
+}
+
+class _ScanningLineState extends State<_ScanningLine>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Positioned(
+          top: (MediaQuery.of(context).size.height - widget.height) / 2 +
+              (_controller.value * widget.height),
+          left: (MediaQuery.of(context).size.width - widget.width) / 2,
+          child: Container(
+            width: widget.width,
+            height: 2,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.red.withOpacity(0.4),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                ),
+              ],
+              gradient: LinearGradient(
+                colors: [
+                  Colors.red.withOpacity(0.0),
+                  Colors.red,
+                  Colors.red.withOpacity(0.0),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 // ─── Info row ─────────────────────────────────────────────────────────────────
 class _InfoRow extends StatelessWidget {
   final IconData icon;
@@ -961,7 +1056,8 @@ class _InfoRow extends StatelessWidget {
       decoration: BoxDecoration(
         border: isLast
             ? null
-            : const Border(bottom: BorderSide(color: _kNeutral100, width: 0.5)),
+            : const Border(
+                bottom: BorderSide(color: AppColors.neutral100, width: 0.5)),
       ),
       child: Row(
         children: [
@@ -969,10 +1065,10 @@ class _InfoRow extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: _kNeutral50,
+              color: AppColors.neutral50,
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(icon, size: 16, color: _kNeutral500),
+            child: Icon(icon, size: 16, color: AppColors.neutral500),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -980,12 +1076,13 @@ class _InfoRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: const TextStyle(fontSize: 11, color: _kTextSub)),
+                    style: const TextStyle(
+                        fontSize: 11, color: AppColors.textSub)),
                 const SizedBox(height: 2),
                 Text(value,
                     style: const TextStyle(
                         fontSize: 13,
-                        color: _kText,
+                        color: AppColors.text,
                         fontWeight: FontWeight.w600)),
               ],
             ),
@@ -996,121 +1093,26 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-// ─── Struk row ────────────────────────────────────────────────────────────────
-// ─── Section label ────────────────────────────────────────────────────────────
-class _SectionLabel extends StatelessWidget {
-  final String text;
-  const _SectionLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: _kNeutral500,
-            letterSpacing: 1.2));
-  }
-}
-
-// ─── Gradient button ──────────────────────────────────────────────────────────
-class _GradientButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback onPressed;
-  final double height;
-  final double fontSize;
-
-  const _GradientButton({
-    required this.label,
-    required this.onPressed,
-    this.icon,
-    this.height = 48,
-    this.fontSize = 13,
+// ─── Tombol bulat transparan ──────────────────────────────────────────────────
+class _CircularCloseButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final IconData icon;
+  const _CircularCloseButton({
+    required this.onTap,
+    this.icon = Icons.close_rounded,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [_kBlue1, _kBlue2],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: _kBlue1.withOpacity(0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            foregroundColor: _kWhite,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18),
-                const SizedBox(width: 8),
-              ],
-              Text(label,
-                  style: TextStyle(
-                      fontSize: fontSize, fontWeight: FontWeight.w700)),
-            ],
-          ),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        shape: BoxShape.circle,
       ),
-    );
-  }
-}
-
-// ─── Outline button ───────────────────────────────────────────────────────────
-class _OutlineButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback onPressed;
-
-  const _OutlineButton(
-      {required this.label, required this.onPressed, this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _kTextSub,
-          side: const BorderSide(color: _kNeutral300, width: 1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: 16),
-              const SizedBox(width: 8),
-            ],
-            Text(label,
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-          ],
-        ),
+      child: IconButton(
+        onPressed: onTap,
+        icon: Icon(icon, color: Colors.white, size: 20),
+        constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
       ),
     );
   }
