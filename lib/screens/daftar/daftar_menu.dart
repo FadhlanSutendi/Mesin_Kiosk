@@ -197,12 +197,12 @@ class DaftarMenu extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.navy,
+                                    color: Color.fromARGB(255, 248, 249, 253),
                                   ),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.arrow_forward_ios,
-                                      size: 16, color: AppColors.navy),
+                                      size: 16, color: Color.fromARGB(255, 252, 252, 253)),
                                   onPressed: () {
                                     showDialog(
                                       context: context,
