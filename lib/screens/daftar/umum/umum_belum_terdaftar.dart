@@ -136,78 +136,61 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
         backgroundColor: Colors.black,
         child: Stack(
           fit: StackFit.expand,
-              children: [
-                RTCVideoView(renderer, objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: _FaceScannerOverlayPainter(
-                      scanWidth: 420,
-                      scanHeight: 560,
-                      borderRadius: 20,
+          children: [
+            RTCVideoView(renderer,
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover),
+            Positioned(
+              top: 10,
+              left: 10,
+              right: 10,
+              child: SafeArea(
+                bottom: false,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      icon: const Icon(Icons.close_rounded,
+                          color: AppColors.white),
                     ),
-                  ),
+                    const Expanded(
+                      child: Text(
+                        'Kamera Wajah Pasien',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
-                Center(
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 24,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
                   child: Container(
-                    width: 420,
-                    height: 560,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
+                      color: Colors.black.withOpacity(0.62),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.18),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 10,
-                  right: 10,
-                  child: SafeArea(
-                    bottom: false,
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          icon: const Icon(Icons.close_rounded, color: AppColors.white),
-                        ),
-                        const Expanded(
-                          child: Text(
-                            'Kamera Wajah Pasien',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 48),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 24,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 500),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.62),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.18),
-                            width: 1,
-                          ),
-                        ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
-                          'Posisikan wajah di dalam frame, lalu tekan Capture Demo.',
+                          'Posisikan wajah di layar, lalu tekan Capture Demo.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColors.white,
@@ -326,7 +309,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
       const Rect.fromLTWH(70, 70, 500, 620),
       const Radius.circular(28),
     );
-    canvas.drawRRect(frameRect, Paint()..color = AppColors.white.withOpacity(0.9));
+    canvas.drawRRect(
+        frameRect, Paint()..color = AppColors.white.withOpacity(0.9));
     canvas.drawRRect(
       frameRect,
       Paint()
@@ -388,68 +372,50 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
           fit: StackFit.expand,
           children: [
             Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _FaceScannerOverlayPainter(
-                  scanWidth: 420,
-                  scanHeight: 560,
-                  borderRadius: 20,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
-            Center(
-              child: Container(
-                width: 420,
-                height: 560,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.person_rounded,
-                    color: Colors.white70,
-                    size: 100,
-                  ),
+            const Center(
+              child: Icon(
+                Icons.person_rounded,
+                color: Colors.white70,
+                size: 120,
+              ),
+            ),
+            Positioned(
+              top: 10,
+              left: 10,
+              right: 10,
+              child: SafeArea(
+                bottom: false,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      icon: const Icon(Icons.close_rounded,
+                          color: AppColors.white),
+                    ),
+                    const Expanded(
+                      child: Text(
+                        'Kamera Wajah (Simulasi Demo)',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
               ),
             ),
-                Positioned(
-                  top: 10,
-                  left: 10,
-                  right: 10,
-                  child: SafeArea(
-                    bottom: false,
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          icon: const Icon(Icons.close_rounded, color: AppColors.white),
-                        ),
-                        const Expanded(
-                          child: Text(
-                            'Kamera Wajah (Simulasi Demo)',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 48),
-                      ],
-                    ),
-                  ),
-                ),
             Positioned(
               left: 0,
               right: 0,
@@ -577,7 +543,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                 padding: EdgeInsets.fromLTRB(20, 14, 20, 16),
                 child: Text(
                   'Silakan menunggu di ruang tunggu. Nomor antrian Anda akan dipanggil melalui layar dan pengeras suara.',
-                  style: TextStyle(fontSize: 13, color: AppColors.textSub, height: 1.6),
+                  style: TextStyle(
+                      fontSize: 13, color: AppColors.textSub, height: 1.6),
                 ),
               ),
               Padding(
@@ -650,7 +617,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.close_rounded, size: 14, color: AppColors.white),
+                        Icon(Icons.close_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Kembali',
                             style: TextStyle(
@@ -678,7 +646,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.print_rounded, size: 14, color: AppColors.white),
+                        Icon(Icons.print_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Cetak',
                             style: TextStyle(
@@ -706,7 +675,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
         margin: const EdgeInsets.all(16),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: AppColors.blue2, size: 18),
+            const Icon(Icons.check_circle_rounded,
+                color: AppColors.blue2, size: 18),
             const SizedBox(width: 10),
             Text('Struk antrian $noAntrian sedang dicetak…',
                 style: const TextStyle(fontSize: 13, color: AppColors.white)),
@@ -724,15 +694,28 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          KioskNavbar(
-            title: 'Pasien Baru',
-            subtitle: 'Lengkapi data diri Anda untuk mendapatkan nomor antrian',
-            backLabel: 'Menu Pendaftaran',
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          Expanded(child: _buildBody()),
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Pasien Baru',
+                subtitle:
+                    'Lengkapi data diri Anda untuk mendapatkan nomor antrian',
+                backLabel: 'Menu Pendaftaran',
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
         ],
       ),
     );
@@ -937,7 +920,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
               gradient: AppColors.blueGradient,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.wc_rounded, color: AppColors.white, size: 16),
+            child:
+                const Icon(Icons.wc_rounded, color: AppColors.white, size: 16),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -996,7 +980,10 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColors.neutral50, AppColors.blue1.withOpacity(0.08)],
+                  colors: [
+                    AppColors.neutral50,
+                    AppColors.blue1.withOpacity(0.08)
+                  ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -1075,7 +1062,8 @@ class _UmumBelumTerdaftarState extends State<UmumBelumTerdaftar> {
                     _fotoBytes != null
                         ? 'Foto berhasil diambil'
                         : 'Foto demo tersimpan',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textSub)),
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.textSub)),
               ],
             ),
           ],
@@ -1178,97 +1166,79 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-              if (_initialized)
-                CameraPreview(_controller)
-              else if (_cameraError != null)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+          if (_initialized)
+            _buildFullScreenPreview()
+          else if (_cameraError != null)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  _cameraError!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontSize: 13,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            )
+          else
+            const Center(
+              child: CircularProgressIndicator(color: AppColors.white),
+            ),
+          Positioned(
+            top: 10,
+            left: 10,
+            right: 10,
+            child: SafeArea(
+              bottom: false,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon:
+                        const Icon(Icons.close_rounded, color: AppColors.white),
+                  ),
+                  const Expanded(
                     child: Text(
-                      _cameraError!,
+                      'Kamera Wajah Pasien (Demo)',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
                         color: AppColors.white,
-                        fontSize: 13,
-                        height: 1.5,
                       ),
                     ),
                   ),
-                )
-              else
-                const Center(
-                  child: CircularProgressIndicator(color: AppColors.white),
-                ),
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: _FaceScannerOverlayPainter(
-                    scanWidth: 420,
-                    scanHeight: 560,
-                    borderRadius: 20,
-                  ),
-                ),
+                  const SizedBox(width: 48),
+                ],
               ),
-              Center(
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 24,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
                 child: Container(
-                  width: 420,
-                  height: 560,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
+                    color: Colors.black.withOpacity(0.62),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.18),
+                      width: 1,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 10,
-                left: 10,
-                right: 10,
-                child: SafeArea(
-                  bottom: false,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close_rounded, color: AppColors.white),
-                      ),
-                      const Expanded(
-                        child: Text(
-                          'Kamera Wajah Pasien (Demo)',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 48),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 24,
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 500),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.62),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.18),
-                          width: 1,
-                        ),
-                      ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        'Posisikan wajah pasien di dalam frame, lalu tekan Capture Demo',
+                        'Posisikan wajah pasien di layar, lalu tekan Capture Demo',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.white,
@@ -1308,6 +1278,22 @@ class _FaceCameraDialogState extends State<_FaceCameraDialog> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFullScreenPreview() {
+    final previewSize = _controller.value.previewSize;
+    if (previewSize == null) return CameraPreview(_controller);
+
+    return SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: previewSize.height,
+          height: previewSize.width,
+          child: CameraPreview(_controller),
+        ),
       ),
     );
   }
@@ -1389,13 +1375,17 @@ class _StatefulInputCardState extends State<_StatefulInputCard> {
               focusNode: _focusNode,
               keyboardType: widget.keyboardType,
               style: const TextStyle(
-                  fontSize: 14, color: AppColors.text, fontWeight: FontWeight.w600),
+                  fontSize: 14,
+                  color: AppColors.text,
+                  fontWeight: FontWeight.w600),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: widget.hint,
-                hintStyle: const TextStyle(fontSize: 13, color: AppColors.textHint),
+                hintStyle:
+                    const TextStyle(fontSize: 13, color: AppColors.textHint),
                 labelText: widget.label,
-                labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSub),
+                labelStyle:
+                    const TextStyle(fontSize: 12, color: AppColors.textSub),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),
@@ -1529,40 +1519,4 @@ class _GenderToggleOption extends StatelessWidget {
       ),
     );
   }
-}
-
-class _FaceScannerOverlayPainter extends CustomPainter {
-  final double scanWidth;
-  final double scanHeight;
-  final double borderRadius;
-
-  _FaceScannerOverlayPainter({
-    required this.scanWidth,
-    required this.scanHeight,
-    required this.borderRadius,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bgPaint = Paint()..color = Colors.black.withOpacity(0.65);
-    final transparentPaint = Paint()
-      ..color = Colors.transparent
-      ..blendMode = BlendMode.clear;
-
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
-
-    final rectPath = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromCenter(
-          center: Offset(size.width / 2, size.height / 2),
-          width: scanWidth,
-          height: scanHeight,
-        ),
-        Radius.circular(borderRadius),
-      ));
-    canvas.drawPath(rectPath, transparentPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

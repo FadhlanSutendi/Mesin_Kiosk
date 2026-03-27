@@ -269,15 +269,27 @@ class _DaftarBPJSState extends State<DaftarBPJS> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          KioskNavbar(
-            title: 'Pendaftaran BPJS',
-            subtitle: 'Masukkan nomor BPJS untuk mencari data peserta',
-            backLabel: 'Menu Pendaftaran',
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          Expanded(child: _buildBody()),
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Pendaftaran BPJS',
+                subtitle: 'Masukkan nomor BPJS untuk mencari data peserta',
+                backLabel: 'Menu Pendaftaran',
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
         ],
       ),
     );

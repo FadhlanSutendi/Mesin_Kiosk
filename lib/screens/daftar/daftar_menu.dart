@@ -95,173 +95,192 @@ class DaftarMenu extends StatelessWidget {
     const double paddingSize = 30.0;
 
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          // ── Navbar menggunakan widget reusable ──
-          KioskNavbar(
-            title: 'Pilih Kategori',
-            subtitle: 'Silahkan pilih jenis layanan pendaftaran anda',
-            backLabel: 'Menu Utama',
-            showJadwalDokter: true,
-            onJadwalDokterTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const JadwalDokterScreen()),
-              );
-            },
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
+          Column(
+            children: [
+              // ── Navbar menggunakan widget reusable ──
+              KioskNavbar(
+                title: 'Pilih Kategori',
+                subtitle: 'Silahkan pilih jenis layanan pendaftaran anda',
+                backLabel: 'Menu Utama',
+                showJadwalDokter: true,
+                onJadwalDokterTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const JadwalDokterScreen()),
+                  );
+                },
+              ),
 
-          // ── Content ──
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                double spacing = 20.0;
-                double cardWidth =
-                    (constraints.maxWidth - (paddingSize * 2) - (spacing * 2)) /
+              // ── Content ──
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    double spacing = 20.0;
+                    double cardWidth = (constraints.maxWidth -
+                            (paddingSize * 2) -
+                            (spacing * 2)) /
                         3;
-                if (cardWidth < 200) cardWidth = 250;
+                    if (cardWidth < 200) cardWidth = 250;
 
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 30),
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 30),
 
-                      // Menu Horizontal Area
-                      SizedBox(
-                        height: 350,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: paddingSize),
-                          physics: const BouncingScrollPhysics(),
-                          children: [
-                            _buildHorizontalCard(
-                              context: context,
-                              title: "Umum",
-                              icon: Icons.person_pin_rounded,
-                              gradientColors: [
-                                const Color(0xFF1E3C72),
-                                const Color(0xFF2A5298)
-                              ],
-                              page: DaftarUmum(),
-                              width: cardWidth,
-                            ),
-                            _buildHorizontalCard(
-                              context: context,
-                              title: "BPJS",
-                              icon: Icons.security_rounded,
-                              gradientColors: [
-                                AppColors.blue1,
-                                const Color(0xFF2448C3)
-                              ],
-                              page: DaftarBPJS(),
-                              width: cardWidth,
-                            ),
-                            _buildHorizontalCard(
-                              context: context,
-                              title: "Spesialis",
-                              icon: Icons.biotech_rounded,
-                              gradientColors: [
-                                const Color(0xFF006DD4),
-                                const Color(0xFF2966F4)
-                              ],
-                              page: DaftarSpesialis(),
-                              width: cardWidth,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Info Layanan
-                      Padding(
-                        padding: const EdgeInsets.all(paddingSize),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Informasi Layanan",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.navy,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.arrow_forward_ios,
-                                  size: 16, color: AppColors.navy),
-                              onPressed: () {
-                                showDialog(
+                          // Menu Horizontal Area
+                          SizedBox(
+                            height: 350,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: paddingSize),
+                              physics: const BouncingScrollPhysics(),
+                              children: [
+                                _buildHorizontalCard(
                                   context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: Container(
-                                        width: 320,
-                                        padding: const EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              "Informasi Layanan",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.navy,
-                                              ),
+                                  title: "Umum",
+                                  icon: Icons.person_pin_rounded,
+                                  gradientColors: [
+                                    const Color(0xFF1E3C72),
+                                    const Color(0xFF2A5298)
+                                  ],
+                                  page: DaftarUmum(),
+                                  width: cardWidth,
+                                ),
+                                _buildHorizontalCard(
+                                  context: context,
+                                  title: "BPJS",
+                                  icon: Icons.security_rounded,
+                                  gradientColors: [
+                                    AppColors.blue1,
+                                    const Color(0xFF2448C3)
+                                  ],
+                                  page: DaftarBPJS(),
+                                  width: cardWidth,
+                                ),
+                                _buildHorizontalCard(
+                                  context: context,
+                                  title: "Spesialis",
+                                  icon: Icons.biotech_rounded,
+                                  gradientColors: [
+                                    const Color(0xFF006DD4),
+                                    const Color(0xFF2966F4)
+                                  ],
+                                  page: DaftarSpesialis(),
+                                  width: cardWidth,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Info Layanan
+                          Padding(
+                            padding: const EdgeInsets.all(paddingSize),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Informasi Layanan",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_forward_ios,
+                                      size: 16, color: AppColors.navy),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: Container(
+                                            width: 320,
+                                            padding: const EdgeInsets.all(20),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
                                             ),
-                                            const SizedBox(height: 15),
-                                            const Text(
-                                              "Menyediakan layanan medis, penunjang medis, IGD, rawat inap, administrasi, layanan khusus, serta informasi jam operasional untuk membantu pasien mendapatkan pelayanan kesehatan.",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black87,
-                                                height: 1.5,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: AppColors.navy,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                  "Informasi Layanan",
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.navy,
+                                                  ),
                                                 ),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text(
-                                                "Tutup",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                                const SizedBox(height: 15),
+                                                const Text(
+                                                  "Menyediakan layanan medis, penunjang medis, IGD, rawat inap, administrasi, layanan khusus, serta informasi jam operasional untuk membantu pasien mendapatkan pelayanan kesehatan.",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black87,
+                                                    height: 1.5,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20),
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        AppColors.navy,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    "Tutup",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -97,7 +97,8 @@ class _UmumTerdaftarState extends State<UmumTerdaftar> {
                 padding: EdgeInsets.fromLTRB(20, 14, 20, 16),
                 child: Text(
                   'Silakan menunggu di ruang tunggu. Nomor antrian Anda akan dipanggil melalui layar dan pengeras suara.',
-                  style: TextStyle(fontSize: 13, color: AppColors.textSub, height: 1.6),
+                  style: TextStyle(
+                      fontSize: 13, color: AppColors.textSub, height: 1.6),
                 ),
               ),
 
@@ -168,7 +169,8 @@ class _UmumTerdaftarState extends State<UmumTerdaftar> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.close_rounded, size: 14, color: AppColors.white),
+                        Icon(Icons.close_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Kembali',
                             style: TextStyle(
@@ -196,7 +198,8 @@ class _UmumTerdaftarState extends State<UmumTerdaftar> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.print_rounded, size: 14, color: AppColors.white),
+                        Icon(Icons.print_rounded,
+                            size: 14, color: AppColors.white),
                         SizedBox(width: 6),
                         Text('Cetak',
                             style: TextStyle(
@@ -224,7 +227,8 @@ class _UmumTerdaftarState extends State<UmumTerdaftar> {
         margin: const EdgeInsets.all(16),
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: AppColors.blue2, size: 18),
+            const Icon(Icons.check_circle_rounded,
+                color: AppColors.blue2, size: 18),
             const SizedBox(width: 10),
             Text('Struk antrian $noAntrian sedang dicetak…',
                 style: const TextStyle(fontSize: 13, color: AppColors.white)),
@@ -242,15 +246,28 @@ class _UmumTerdaftarState extends State<UmumTerdaftar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          KioskNavbar(
-            title: 'Pasien Terdaftar',
-            subtitle: 'Masukkan No. RM atau NIK Anda untuk mendaftar antrian',
-            backLabel: 'Menu Pendaftaran',
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          Expanded(child: _buildBody()),
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Pasien Terdaftar',
+                subtitle:
+                    'Masukkan No. RM atau NIK Anda untuk mendaftar antrian',
+                backLabel: 'Menu Pendaftaran',
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
         ],
       ),
     );
@@ -348,13 +365,17 @@ class _FocusableInputCard extends StatelessWidget {
               focusNode: focusNode,
               keyboardType: keyboardType,
               style: const TextStyle(
-                  fontSize: 14, color: AppColors.text, fontWeight: FontWeight.w600),
+                  fontSize: 14,
+                  color: AppColors.text,
+                  fontWeight: FontWeight.w600),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hint,
-                hintStyle: const TextStyle(fontSize: 13, color: AppColors.textHint),
+                hintStyle:
+                    const TextStyle(fontSize: 13, color: AppColors.textHint),
                 labelText: label,
-                labelStyle: const TextStyle(fontSize: 12, color: AppColors.textSub),
+                labelStyle:
+                    const TextStyle(fontSize: 12, color: AppColors.textSub),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),

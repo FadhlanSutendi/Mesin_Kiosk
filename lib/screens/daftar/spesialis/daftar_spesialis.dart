@@ -251,15 +251,27 @@ class _DaftarSpesialisState extends State<DaftarSpesialis> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          KioskNavbar(
-            title: 'Poli Spesialis',
-            subtitle: 'Pilih spesialis dan dokter yang ingin Anda tuju',
-            backLabel: 'Menu Pendaftaran',
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          Expanded(child: _buildBody()),
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Poli Spesialis',
+                subtitle: 'Pilih spesialis dan dokter yang ingin Anda tuju',
+                backLabel: 'Menu Pendaftaran',
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
         ],
       ),
     );

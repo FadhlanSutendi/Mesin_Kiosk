@@ -66,35 +66,47 @@ class _JadwalDokterScreenState extends State<JadwalDokterScreen> {
     final penuh = total - tersedia;
 
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          KioskNavbar(
-            title: 'Jadwal Dokter',
-            subtitle: 'Daftar dokter yang bertugas hari ini',
-            backLabel: 'Menu Utama',
-            stats: [
-              NavStatChip(label: 'Total', value: '$total'),
-              NavStatChip(
-                label: 'Tersedia',
-                value: '$tersedia',
-                color: const Color(0xFF4ADE80),
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
               ),
-              NavStatChip(
-                label: 'Penuh',
-                value: '$penuh',
-                color: const Color(0xFFF87171),
+            ),
+          ),
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Jadwal Dokter',
+                subtitle: 'Daftar dokter yang bertugas hari ini',
+                backLabel: 'Menu Utama',
+                stats: [
+                  NavStatChip(label: 'Total', value: '$total'),
+                  NavStatChip(
+                    label: 'Tersedia',
+                    value: '$tersedia',
+                    color: const Color(0xFF4ADE80),
+                  ),
+                  NavStatChip(
+                    label: 'Penuh',
+                    value: '$penuh',
+                    color: const Color(0xFFF87171),
+                  ),
+                ],
+              ),
+              _buildSearchBar(),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                  itemCount: _filteredJadwal.length,
+                  itemBuilder: (context, index) =>
+                      _DokterCard(data: _filteredJadwal[index]),
+                ),
               ),
             ],
-          ),
-          _buildSearchBar(),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-              itemCount: _filteredJadwal.length,
-              itemBuilder: (context, index) =>
-                  _DokterCard(data: _filteredJadwal[index]),
-            ),
           ),
         ],
       ),

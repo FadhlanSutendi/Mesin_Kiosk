@@ -10,46 +10,58 @@ class DaftarUmum extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.neutral50,
-      body: Column(
+      body: Stack(
         children: [
-          KioskNavbar(
-            title: 'Pilih Kategori',
-            subtitle: 'Silahkan pilih jenis layanan pendaftaran anda',
-            backLabel: 'Menu Pendaftaran',
-          ),
-
-          const SizedBox(height: 40),
-
-          /// CARD MENU
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildCard(
-                    context,
-                    "Terdaftar",
-                    Icons.person,
-                    AppColors.blueGradient,
-                    UmumTerdaftar(),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: _buildCard(
-                    context,
-                    "Belum\nTerdaftar",
-                    Icons.person_add,
-                    const LinearGradient(
-                      colors: [Color(0xFF1E0DE1), Color(0xFF42028B)],
-                    ),
-                    UmumBelumTerdaftar(),
-                  ),
-                ),
-              ],
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.50,
+              child: Image.asset(
+                'Assets/background/image.png',
+                fit: BoxFit.cover,
+              ),
             ),
-          )
+          ),
+          Column(
+            children: [
+              KioskNavbar(
+                title: 'Pilih Kategori',
+                subtitle: 'Silahkan pilih jenis layanan pendaftaran anda',
+                backLabel: 'Menu Pendaftaran',
+              ),
+
+              const SizedBox(height: 40),
+
+              /// CARD MENU
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildCard(
+                        context,
+                        "Terdaftar",
+                        Icons.person,
+                        AppColors.blueGradient,
+                        UmumTerdaftar(),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: _buildCard(
+                        context,
+                        "Belum\nTerdaftar",
+                        Icons.person_add,
+                        const LinearGradient(
+                          colors: [Color(0xFF1E0DE1), Color(0xFF42028B)],
+                        ),
+                        UmumBelumTerdaftar(),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

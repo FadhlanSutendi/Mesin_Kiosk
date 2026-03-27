@@ -217,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        'RUMAH SAKIT KIOSK',
+                        'RUMAH SAKIT DEMO',
                         style: TextStyle(
                           fontSize: 20,
                           color: AppColors.navy,
