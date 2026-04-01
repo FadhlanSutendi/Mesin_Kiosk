@@ -8,6 +8,49 @@ void main() async {
   runApp(const MyApp());
 }
 
+class KioskPageTransitionsBuilder extends PageTransitionsBuilder {
+  const KioskPageTransitionsBuilder();
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 1150);
+
+  @override
+  Duration get reverseTransitionDuration => const Duration(milliseconds: 900);
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final fadeInAnimation = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeInOut,
+      reverseCurve: Curves.easeOut,
+    );
+
+    final fadeOutAnimation = Tween<double>(
+      begin: 1,
+      end: 0,
+    ).animate(
+      CurvedAnimation(
+        parent: secondaryAnimation,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    return FadeTransition(
+      opacity: fadeOutAnimation,
+      child: FadeTransition(
+        opacity: fadeInAnimation,
+        child: child,
+      ),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -16,7 +59,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sistem Antrian RS',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark().copyWith(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: KioskPageTransitionsBuilder(),
+            TargetPlatform.iOS: KioskPageTransitionsBuilder(),
+            TargetPlatform.linux: KioskPageTransitionsBuilder(),
+            TargetPlatform.macOS: KioskPageTransitionsBuilder(),
+            TargetPlatform.windows: KioskPageTransitionsBuilder(),
+            TargetPlatform.fuchsia: KioskPageTransitionsBuilder(),
+          },
+        ),
+      ),
       home: const DashboardScreen(),
     );
   }

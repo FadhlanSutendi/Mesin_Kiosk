@@ -61,15 +61,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         iconColor: const Color(0xFFE85D3F),
         onTap: () => _openPage(context, IndexOnlineScreen()),
       ),
-      MenuCardItem(
-        title: 'Admin',
-        subtitle: 'Hubungi petugas untuk bantuan',
-        icon: Icons.description_rounded,
-        cardColor: const Color(0xFFFDF4FE), // Ungu pastel
-        iconBg: Colors.white,
-        iconColor: const Color(0xFF9B3FD4),
-        onTap: () {},
-      ),
     ];
   }
 
@@ -126,13 +117,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         child: Center(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: contentMaxWidth - (isDesktop ? 80 : 48)),
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    contentMaxWidth - (isDesktop ? 80 : 48)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildSectionLabel('Layanan Utama'),
                                 const SizedBox(height: 16),
-                                DashboardMenuGrid(items: _buildMenuItems(context)),
+                                DashboardMenuGrid(
+                                    items: _buildMenuItems(context)),
                                 const SizedBox(height: 32),
                                 _buildSectionLabel('Informasi Hari Ini'),
                                 const SizedBox(height: 16),
@@ -242,7 +236,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               // Premium Date Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
                   color: AppColors.white.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(16),

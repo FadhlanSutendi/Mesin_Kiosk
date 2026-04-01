@@ -31,14 +31,51 @@ class DashboardMenuGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 2.45,
-      children: items.map((item) => _MenuCard(item: item)).toList(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth >= 700;
+        final double cardHeight = isWide ? 180 : 165;
+
+        if (items.length == 3 && isWide) {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: cardHeight,
+                      child: _MenuCard(item: items[0]),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: cardHeight,
+                      child: _MenuCard(item: items[1]),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: cardHeight,
+                width: double.infinity,
+                child: _MenuCard(item: items[2]),
+              ),
+            ],
+          );
+        }
+
+        return GridView.count(
+          crossAxisCount: isWide ? 2 : 1,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: isWide ? 2.45 : 2.1,
+          children: items.map((item) => _MenuCard(item: item)).toList(),
+        );
+      },
     );
   }
 }
@@ -254,4 +291,3 @@ class _InfoCard extends StatelessWidget {
     );
   }
 }
-

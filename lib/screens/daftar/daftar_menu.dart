@@ -189,89 +189,159 @@ class DaftarMenu extends StatelessWidget {
                           // Info Layanan
                           Padding(
                             padding: const EdgeInsets.all(paddingSize),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Informasi Layanan",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 248, 249, 253),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.96),
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(
+                                  color:
+                                      const Color(0xFF0B2A6F).withOpacity(0.10),
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF0B2A6F)
+                                        .withOpacity(0.12),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.arrow_forward_ios,
-                                      size: 16, color: Color.fromARGB(255, 252, 252, 253)),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return Dialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                          child: Container(
-                                            width: 320,
-                                            padding: const EdgeInsets.all(20),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF0B2A6F)
+                                              .withOpacity(0.10),
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                        ),
+                                        child: const Icon(
+                                          Icons.info_outline_rounded,
+                                          color: AppColors.navy,
+                                          size: 24,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      const Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Informasi Layanan",
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.navy,
+                                              ),
                                             ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Text(
-                                                  "Informasi Layanan",
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: AppColors.navy,
+                                            SizedBox(height: 4),
+                                            Text(
+                                              "Lihat ringkasan layanan rumah sakit dengan tampilan yang lebih jelas.",
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Color(0xFF4E648E),
+                                                height: 1.4,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 16,
+                                          color: AppColors.navy,
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return Dialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                child: Container(
+                                                  width: 320,
+                                                  padding:
+                                                      const EdgeInsets.all(20),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const Text(
+                                                        "Informasi Layanan",
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: AppColors.navy,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 15),
+                                                      const Text(
+                                                        "Menyediakan layanan medis, penunjang medis, IGD, rawat inap, administrasi, layanan khusus, serta informasi jam operasional untuk membantu pasien mendapatkan pelayanan kesehatan.",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.black87,
+                                                          height: 1.5,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 20),
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              AppColors.navy,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          "Tutup",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 ),
-                                                const SizedBox(height: 15),
-                                                const Text(
-                                                  "Menyediakan layanan medis, penunjang medis, IGD, rawat inap, administrasi, layanan khusus, serta informasi jam operasional untuk membantu pasien mendapatkan pelayanan kesehatan.",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black87,
-                                                    height: 1.5,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 20),
-                                                ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        AppColors.navy,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text(
-                                                    "Tutup",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           )
                         ],
